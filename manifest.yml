@@ -1,0 +1,19 @@
+declared-services:
+  ipa-dialog_service:
+    label: dialog
+    plan: standard
+  ipa-nlc_service:
+    label: natural_language_classifier
+    plan: standard
+#  ipa-cloudant_service:
+#    label: cloudantNoSQLDB
+#    plan: Shared
+applications:
+- services:
+  - ipa-nlc_service
+  - ipa-dialog_service
+#  - ipa-cloudant_service
+  name: itinnovation-chatbot-helpdesk
+  command: node app.js
+  path: .
+  memory: 512M

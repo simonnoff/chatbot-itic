@@ -1,0 +1,29 @@
+//- layout.jade
+doctype html
+html(lang='en')
+  head
+    block title
+      title IT Service Desk
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+
+    link(rel='shortcut icon', href='/images/favicon.ico', type='image/x-icon')
+    link(rel='icon', href='/images/favicon.ico', type='image/x-icon')
+    link(rel='stylesheet', href='/css/bootstrap-dark.css')
+    link(rel='stylesheet', href='/css/banner.css')
+    link(rel='stylesheet', href='/css/style.css')
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato")
+    link(rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css")
+    block extra-stylesheet
+
+  body
+    div.row.service-container
+      block row-content
+
+    script(type='text/javascript', src='/javascript/jquery-1.11.1.min.js')
+    script(type='text/javascript', src='/javascript/math.min.js')
+    script(type='text/javascript', src='/javascript/calculationPipeline.js')
+    script(type='text/javascript', src='/javascript/jokesPipeline.js')
+    script(type='text/javascript', src='/javascript/ipaRemote.js')
+  block extra-scripts

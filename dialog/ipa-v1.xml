@@ -1,0 +1,1086 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="./public/css/style.css"?>
+<dialog xsi:noNamespaceSchemaLocation="WatsonDialogDocument_1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <flow>
+        <folder label="Main">
+            <input>
+                <grammar>
+                    <item>DIALOG_START_OVER</item>
+                </grammar>
+                <output id="conversationStartOver">
+                    <prompt selectionType="RANDOM">
+                        <item>If you have any other issues just call me? (y/n)</item>
+                        <item>Anything else to ask? (y/n)</item>
+                        <item>Do you have any other problems? (y/n)</item>
+                    </prompt>
+                    <getUserInput>
+                        <input>
+                            <grammar>
+                                <item>$ yes</item>
+                                <item>yes</item>
+                            </grammar>
+                            <output>
+                                <prompt selectionType="RANDOM">
+                                    <item>Alright, but first I need some information from you.</item>
+                                    <item>I will help you, but I will ask you for a quick info first.</item>
+                                    <item>Don't worry, I will help you with the issue, just a quick info first.</item>
+                                </prompt>
+                                <goto ref="problem_describtion"/>
+                            </output>
+                        </input>
+                        <input>
+                            <grammar>
+                                <item>$ no</item>
+                                <item>no</item>
+                            </grammar>
+                            <output>
+                                <prompt selectionType="RANDOM">
+                                    <item>Glab everything is ok, wish you a wonderful day.</item>
+                                    <item>Perfect, wish you a great day.</item>
+                                </prompt>
+                                <goto ref="conversationStartOver"/>
+                            </output>
+                        </input>
+                        <output>
+                            <prompt selectionType="RANDOM">
+                                <item>I couldn't catch that.</item>
+                                <item>What did you want to say?</item>
+                                <item>I couldn't understand, can you repeat?</item>
+                            </prompt>
+                            <goto ref="conversationStartOver"/>
+                        </output>
+                    </getUserInput>
+                </output>
+            </input>
+            <output>
+                <prompt>
+                    <item>Hello, I am the IT Service Desk virtual assistant. Before you report your problem I need some information from you.</item>
+                </prompt>
+                <goto ref="processUserRequest"/>
+            </output>
+            <output id="processNextUserRequest">
+                <prompt>
+                    <item>DIALOG_COMPLETED</item>
+                </prompt>
+                <goto ref="conversationStartOver"/>
+            </output>
+            <output id="processUserRequest">
+                <prompt selectionType="RANDOM">
+                    <item>Enter your full name?</item>
+                    <item>What is your full name?</item>
+                    <item>How can I call you?</item>
+                </prompt>
+                <getUserInput>
+                    <input>
+                        <grammar>
+                            <item>My name is</item>
+                            <item>$ (freeanswer)={var-user_name}</item>
+                        </grammar>
+                        <action varName="var-user_name" operator="SET_TO">{var-user_name.source}</action>
+                        <output>
+                            <prompt>
+                                <item>Thank you, {var-user_name}! Now I will need your email address?</item>
+                            </prompt>
+                            <getUserInput>
+                                <input>
+                                    <grammar>
+                                        <item>My email address is</item>
+                                        <item>$ (freeanswer)={var-user_email}</item>
+                                    </grammar>
+                                    <action varName="var-user_email" operator="SET_TO">{var-user_email.source}</action>
+                                    <output>
+                                        <prompt>
+                                            <item>Wonderful! What is your telephone number?</item>
+                                        </prompt>
+                                        <getUserInput>
+                                            <input>
+                                                <grammar>
+                                                    <item>My telephone is</item>
+                                                    <item>$ (freeanswer)={var-user_tel}</item>
+                                                </grammar>
+                                                <action varName="var-user_tel" operator="SET_TO">{var-user_tel.source}</action>
+                                                <output>
+                                                    <prompt>
+                                                        <item>Perfect! Now I need the location of the fault. A university building, room number, street name, city, etc.</item>
+                                                    </prompt>
+                                                    <getUserInput>
+                                                        <input>
+                                                            <grammar>
+                                                                <item>My location is</item>
+                                                                <item>$ (freeanswer)={var-user_loc}</item>
+                                                            </grammar>
+                                                            <action varName="var-user_loc" operator="SET_TO">{var-user_loc.source}</action>
+                                                            <output id="problem_describtion">
+                                                                <prompt>
+                                                                    <item>I would like you to enter a full description of your problem, including error messages, device type and name, etc. (describe)</item>
+                                                                </prompt>
+                                                                <getUserInput>
+                                                                    <search ref="intents_supported_folder"/>
+                                                                    <default>
+                                                                        <output>
+                                                                            <prompt selectionType="RANDOM">
+                                                                                <item>Probably you misspelled something! Try typing your answer again.</item>
+                                                                                <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                                                                <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                                                            </prompt>
+                                                                        </output>
+                                                                    </default>
+                                                                </getUserInput>
+                                                            </output>
+                                                        </input>
+                                                    </getUserInput>
+                                                </output>
+                                            </input>
+                                        </getUserInput>
+                                    </output>
+                                </input>
+                            </getUserInput>    
+                        </output>
+                    </input>
+                </getUserInput>
+            </output>
+        </folder>
+        <folder label="Library" id="Library">
+            <folder label="Live Content" id="intents_supported_folder">
+                <input>
+                    <grammar>
+                        <item>email-issue *</item>
+                    </grammar>
+                    <action varName="var-problem_type" operator="SET_TO">Email</action>
+                    <output>
+                        <prompt selectionType="RANDOM">
+                            <item>Now I would ask you some more questions about the problem with your email address.</item>
+                            <item>I need to ask you bonus questions regarding the problem with your email address.</item>
+                        </prompt>
+                        <goto ref="emailFault"/>
+                    </output>
+                </input>
+                <input>
+                    <grammar>
+                        <item>web-network-issue *</item>
+                    </grammar>
+                    <action varName="var-problem_type" operator="SET_TO">Web network</action>
+                    <output>
+                        <prompt selectionType="RANDOM">
+                            <item>Now I would ask you some more questions about your web network problem.</item>
+                            <item>I need to ask you bonus questions regarding the problem with the web network.</item>
+                        </prompt>
+                        <goto ref="webNetworkFault"/>
+                    </output>
+                </input>
+                <input>
+                    <grammar>
+                        <item>wireless-network-issue *</item>
+                    </grammar>
+                    <action varName="var-problem_type" operator="SET_TO">Wireless network</action>
+                    <output>
+                        <prompt selectionType="RANDOM">
+                            <item>Now I would ask you some more questions about your wireless network problem.</item>
+                            <item>I need to ask you bonus questions regarding the problem with the wireless network.</item>
+                        </prompt>
+                        <goto ref="wirelessNetworkFault"/>
+                    </output>
+                </input>
+            </folder>
+            <folder id="Questions">
+                <output id="emailFault">
+                    <prompt>
+                        <item>Are you a student or a member of staff? (staff/student)</item>
+                    </prompt>
+                    <getUserInput>
+                        <input>
+                            <grammar>
+                                <item>$ student</item>
+                                <item>student</item>
+                            </grammar>
+                            <action varName="var-email-user_type" operator="SET_TO">Student</action>
+                            <action varName="var-email-user_email" operator="SET_TO">outlook.bham.ac.uk</action>
+                            <goto ref="userEmailProblem"/>
+                        </input>
+                        <input>
+                            <grammar>
+                                <item>$ staff</item>
+                                <item>staff</item>
+                            </grammar>
+                            <action varName="var-email-user_type" operator="SET_TO">Staff member</action>
+                            <action varName="var-email-user_email" operator="SET_TO">mail.bham.ac.uk</action>
+                            <goto ref="userEmailProblem"/>
+                        </input>
+                        <output>
+                            <prompt selectionType="RANDOM">
+                                <item>Probably you misspelled something! Answer the question again.</item>
+                                <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                            </prompt>
+                            <goto ref="emailFault"/>
+                        </output>
+                    </getUserInput>
+                    <output id="userEmailProblem">
+                        <prompt>
+                            <item>Are you able to log into my.bham.ac.uk or canvas.bham.ac.uk? (y/n)</item>
+                        </prompt>
+                        <getUserInput>
+                            <input>
+                                <grammar>
+                                    <item>$ yes</item>
+                                    <item>yes</item>
+                                </grammar>
+                                <goto ref="userAccessEmail"/>
+                            </input>
+                            <input>
+                                <grammar>
+                                    <item>$ no</item>
+                                    <item>no</item>
+                                </grammar>
+                                <output id="account-locked">
+                                    <prompt>
+                                        <item>Your account may be locked out. You need to unlock it at my.password.bham.ac.uk - this must fix the issue! Do you still have a problem? (y/n)</item>
+                                    </prompt>
+                                    <getUserInput>
+                                        <input>
+                                            <grammar>
+                                                <item>yes</item>
+                                                <item>$ yes</item>
+                                            </grammar>
+                                            <output>
+                                                <prompt selectionType="RANDOM">
+                                                    <item>Your problem might be in the email. </item>
+                                                </prompt>
+                                                <goto ref="userAccessEmail"/>
+                                            </output>
+                                        </input>
+                                        <input>
+                                            <grammar>
+                                                <item>no</item>
+                                                <item>$ no</item>
+                                            </grammar>
+                                            <output>
+                                                <prompt selectionType="RANDOM">
+                                                    <item>Glab everything is ok, wish you a wonderful day.</item>
+                                                    <item>Perfect, wish you a great day.</item>
+                                                </prompt>
+                                                <goto ref="conversationStartOver"/>
+                                            </output>
+                                        </input>
+                                        <output>
+                                            <prompt selectionType="RANDOM">
+                                                <item>Probably you misspelled something! Answer the question again.</item>
+                                                <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                                <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                            </prompt>
+                                            <goto ref="account-locked"/>
+                                        </output>
+                                    </getUserInput>
+                                </output>
+                            </input>
+                            <output>
+                                <prompt selectionType="RANDOM">
+                                    <item>Probably you misspelled something! Answer the question again.</item>
+                                    <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                    <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                </prompt>
+                                <goto ref="userEmailProblem"/>
+                            </output>
+                        </getUserInput>
+                        <output id="userAccessEmail">
+                            <prompt>
+                                <item>Please, tell me how are you trying to view your email? (web/client)</item>
+                            </prompt> 
+                            <getUserInput> 
+                                <input>
+                                    <grammar>
+                                        <item>client</item>
+                                        <item>$ client</item>
+                                        <item>$ client email</item>
+                                    </grammar>
+                                    <output id="able-to-get-email">
+                                        <prompt>
+                                            <item>Try viewing you email at '{var-email-user_email}'. Are you able to get email there? (y/n)</item>
+                                        </prompt>
+                                        <getUserInput>
+                                            <input>
+                                                <grammar>
+                                                    <item>$ yes</item>
+                                                    <item>yes</item>
+                                                </grammar>
+                                                <output id="userRebootComputer">
+                                                    <prompt>
+                                                        <item>Have you tried rebooting the computer? (y/n)</item>
+                                                    </prompt>
+                                                    <getUserInput>
+                                                        <input>
+                                                            <grammar>
+                                                                <item>$ yes</item>
+                                                                <item>yes</item>
+                                                            </grammar>
+                                                            <output>
+                                                                <prompt selectionType="RANDOM">
+                                                                    <item>Your problem must lie with the software. Further investigation needed. Before I procceed your problem to our team, I need some more information from you.</item>
+                                                                    <item>Perhaps the issue is with the software. I will procceed the problem to our team, but first I need to ask you some more questions.</item>
+                                                                </prompt>
+                                                                <goto ref="userEmailProblemBonusInfo"/>
+                                                            </output>
+                                                        </input>
+                                                        <input>
+                                                            <grammar>
+                                                                <item>$ no</item>
+                                                                <item>no</item>
+                                                            </grammar>
+                                                            <output>
+                                                                <prompt>
+                                                                    <item>Reboot the computer and come back if there is still an issue.</item>
+                                                                </prompt>
+                                                                <goto ref="conversationStartOver"/>
+                                                            </output>
+                                                        </input>
+                                                        <output>
+                                                            <prompt selectionType="RANDOM">
+                                                                <item>Probably you misspelled something! Answer the question again.</item>
+                                                                <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                                                <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                                            </prompt>
+                                                            <goto ref="userRebootComputer"/>
+                                                        </output>
+                                                    </getUserInput>
+                                                </output>
+                                            </input>
+                                            <input>
+                                                <grammar>
+                                                    <item>$ no</item>
+                                                    <item>no</item>
+                                                </grammar>
+                                                <output id="emailWorkOtherBrowser">
+                                                    <prompt>
+                                                        <item>Does it work on another browser? (y/n)</item>
+                                                    </prompt>
+                                                    <getUserInput>
+                                                        <input>
+                                                            <grammar>
+                                                                <item>$ yes</item>
+                                                                <item>yes</item>
+                                                            </grammar>
+                                                            <goto ref="userRebootComputer"/>
+                                                        </input>
+                                                        <input>
+                                                            <grammar>
+                                                                <item>$ no</item>
+                                                                <item>no</item>
+                                                            </grammar>
+                                                            <if>
+                                                                <cond varName="var-email-user_type" operator="EQUALS">Student</cond>
+                                                                <output>
+                                                                    <output>
+                                                                        <prompt>
+                                                                            <item>Are you using your full email address username@student.bham.ac.uk? (y/n)</item>
+                                                                        </prompt>
+                                                                        <getUserInput>
+                                                                            <input>
+                                                                                <grammar>
+                                                                                    <item>$ yes</item>
+                                                                                    <item>yes</item>
+                                                                                </grammar>
+                                                                                <output>
+                                                                                    <prompt>
+                                                                                        <item>Issue must lie with the account. Further investigation needed. Before I procceed your problem to our team, I need some further information from you.</item>
+                                                                                    </prompt>
+                                                                                    <goto ref="userEmailProblemBonusInfo"/>
+                                                                                </output>
+                                                                            </input>
+                                                                            <input>
+                                                                                <grammar>
+                                                                                    <item>$ no</item>
+                                                                                    <item>no</item>
+                                                                                </grammar>
+                                                                                <output>
+                                                                                    <prompt>
+                                                                                        <item>Did using that help? (y/n)</item>
+                                                                                    </prompt>
+                                                                                    <getUserInput>
+                                                                                        <input>
+                                                                                            <grammar>
+                                                                                                <item>$ yes</item>
+                                                                                                <item>yes</item>
+                                                                                            </grammar>
+                                                                                            <output>
+                                                                                                <prompt>
+                                                                                                    <item>Wonderful! Happy that I managed to help you.</item>
+                                                                                                </prompt>
+                                                                                                <goto ref="conversationStartOver"/>
+                                                                                            </output>
+                                                                                        </input>
+                                                                                        <input>
+                                                                                            <grammar>
+                                                                                                <item>$ no</item>
+                                                                                                <item>no</item>
+                                                                                            </grammar>
+                                                                                            <output>
+                                                                                                <prompt>
+                                                                                                    <item>Issue must lie with the account. Further investigation needed. Before I procceed your problem to our team, I need some further information from you.</item>
+                                                                                                </prompt>
+                                                                                                <goto ref="userEmailProblemBonusInfo"/>
+                                                                                            </output>
+                                                                                        </input>
+                                                                                    </getUserInput>
+                                                                                </output>
+                                                                            </input>
+                                                                        </getUserInput>
+                                                                    </output>
+                                                                </output>
+                                                            </if>
+                                                            <output>
+                                                                <prompt selectionType="RANDOM">
+                                                                    <item>Your problem must lie with the account. Further investigation needed. Before I procceed your problem to our team, I need some more information from you.</item>
+                                                                    <item>Perhaps the issue is with the account. I will proccees the problem to our team, but first I need to ask you some more questions.</item>
+                                                                </prompt>
+                                                                <goto ref="userEmailProblemBonusInfo"/>
+                                                            </output>
+                                                        </input>
+                                                        <output>
+                                                            <prompt selectionType="RANDOM">
+                                                                <item>Probably you misspelled something! Answer the question again.</item>
+                                                                <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                                                <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                                            </prompt>
+                                                            <goto ref="emailWorkOtherBrowser"/>
+                                                        </output>
+                                                    </getUserInput>
+                                                </output>
+                                            </input>
+                                            <output>
+                                                <prompt selectionType="RANDOM">
+                                                    <item>Probably you misspelled something! Answer the question again.</item>
+                                                    <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                                    <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                                </prompt>
+                                                <goto ref="able-to-get-email"/>
+                                            </output>
+                                        </getUserInput>
+                                    </output>
+                                </input>
+                                <input>
+                                    <grammar>
+                                        <item>$ web mail</item>
+                                        <item>$ web</item>
+                                        <item>web</item>
+                                    </grammar>
+                                    <goto ref="emailWorkOtherBrowser"/>
+                                </input>
+                                <output>
+                                    <prompt selectionType="RANDOM">
+                                        <item>Probably you misspelled something! Answer the question again.</item>
+                                        <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                        <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                    </prompt>
+                                    <goto ref="userAccessEmail"/>
+                                </output>
+                            </getUserInput>
+                        </output>
+                    </output>
+                    <output id="userEmailProblemBonusInfo">
+                        <prompt>
+                            <item>What is the name of your computer? (computer name)</item>
+                        </prompt>
+                        <getUserInput>
+                            <input>
+                                <grammar>
+                                    <item>The name of my computer is</item>
+                                    <item>$ (freeanswer)={var-user-computer_name}</item>
+                                </grammar>
+                                <action varName="var-user-computer_name" operator="SET_TO">{var-user-computer_name.source}</action>
+                                <output>
+                                    <prompt>
+                                        <item>Thank you. Now I will need you to enter all the error messages that you receive.</item>
+                                    </prompt>
+                                    <getUserInput>
+                                        <input>
+                                            <grammar>
+                                                <item>The error messages are</item>
+                                                <item>$ (freeanswer)={var-user_errormessages}</item>
+                                            </grammar>
+                                            <action varName="var-user_errormessages" operator="SET_TO">{var-user_errormessages.source}</action>
+                                            <output>
+                                                <prompt>
+                                                    <item>
+                                                        Wonderful! Your information is - Name: {var-user_name}, Email: {var-user_email}, Tel: {var-user_tel}, Location: {var-user_loc}, Problem: {var-problem_type}, 
+                                                        Type of user: {var-email-user_type}, Name of computer: {var-user-computer_name}, Error messages: {var-user_errormessages}. I will send it to our team.
+                                                    </item>
+                                                </prompt>
+                                                <goto ref="conversationStartOver"/>
+                                            </output>
+                                        </input>
+                                    </getUserInput>
+                                </output>
+                            </input>
+                        </getUserInput>
+                    </output>
+                </output>
+                <output id="webNetworkFault">
+                    <prompt>
+                        <item>Is the network slow or totally down? (slow/down)</item>
+                    </prompt>
+                    <getUserInput>
+                        <input>
+                            <grammar>
+                                <item>slow</item>
+                                <item>$ slow</item>
+                            </grammar>
+                            <goto ref="peopleAffected"/>
+                        </input>
+                        <input>
+                            <grammar>
+                                <item>down</item>
+                                <item>$ down</item>
+                            </grammar>
+                            <output id="has-it-worked">
+                                <prompt>
+                                    <item>Has it ever worked? (y/n)</item>
+                                </prompt>
+                                <getUserInput>
+                                    <input>
+                                        <grammar>
+                                            <item>yes</item>
+                                            <item>$ yes</item>
+                                        </grammar>
+                                        <goto ref="peopleAffected"/>
+                                    </input>
+                                    <input>
+                                        <grammar>
+                                            <item>no</item>
+                                            <item>$ no</item>
+                                        </grammar>
+                                        <output>
+                                            <prompt selectionType="RANDOM">
+                                                <item>The network need to be registered in order to work. I need to ask you some more questions.</item>
+                                                <item>It seems that the web network need registration, I will need some more info from you.</item>
+                                            </prompt>
+                                            <goto ref="userWebNetworkProblemBonusInfo"/>
+                                        </output>
+                                    </input>
+                                    <output>
+                                        <prompt selectionType="RANDOM">
+                                            <item>Probably you misspelled something! Answer the question again.</item>
+                                            <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                            <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                        </prompt>
+                                        <goto ref="has-it-worked"/>
+                                    </output>
+                                </getUserInput>
+                            </output>
+                        </input>
+                        <output>
+                            <prompt selectionType="RANDOM">
+                                <item>Probably you misspelled something! Answer the question again.</item>
+                                <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                            </prompt>
+                            <goto ref="webNetworkFault"/>
+                        </output>
+                    </getUserInput>
+                    <output id="peopleAffected">
+                        <prompt>
+                            <item>How many people are affected? (many/justme)</item>
+                        </prompt>
+                        <getUserInput>
+                            <input>
+                                <grammar>
+                                    <item>many</item>
+                                    <item>$ many</item>
+                                </grammar>
+                                <output>
+                                    <prompt selectionType="RANDOM">
+                                        <item>Probably there is an issue with the network. Investigation is need from our team. But before sending your details I need some more information.</item>
+                                        <item>Well, so the problem is with the network. I will ask you more questions before sending the issue detaisl to our team.</item>
+                                    </prompt>
+                                    <goto ref="userWebNetworkProblemBonusInfo"/>
+                                </output>
+                            </input>
+                            <input>
+                                <grammar>
+                                    <item>just me</item>
+                                    <item>$ just me</item>
+                                </grammar>
+                                <output id="cables-connected">
+                                    <prompt>
+                                        <item>Are the cables connected and with green solid light and amber flashing light? (y/n)</item>
+                                    </prompt>
+                                    <getUserInput>
+                                        <input>
+                                            <grammar>
+                                                <item>yes</item>
+                                                <item>$ yes</item>
+                                            </grammar>
+                                            <output id="userRebootComputerWebBrowser">
+                                                <prompt>
+                                                    <item>Have you tried rebooting the computer? (y/n)</item>
+                                                </prompt>
+                                                <getUserInput>
+                                                    <input>
+                                                        <grammar>
+                                                            <item>$ yes</item>
+                                                            <item>yes</item>
+                                                        </grammar>
+                                                        <output>
+                                                            <prompt selectionType="RANDOM">
+                                                                <item>Perhaps there is an issue with the PC. Before forwarding your information to our team, I need to ask you some more questions.</item>
+                                                                <item>Probably you have a problem with the PC. In order to be fixed, I need some more info from you that I will forward to our team.</item>
+                                                            </prompt>
+                                                            <goto ref="userWebNetworkProblemBonusInfo"/>
+                                                        </output>
+                                                    </input>
+                                                    <input>
+                                                        <grammar>
+                                                            <item>$ no</item>
+                                                            <item>no</item>
+                                                        </grammar>
+                                                        <output>
+                                                            <prompt>
+                                                                <item>Reboot the computer and come back if there is still an issue.</item>
+                                                            </prompt>
+                                                            <goto ref="conversationStartOver"/>
+                                                        </output>
+                                                    </input>
+                                                    <output>
+                                                        <prompt selectionType="RANDOM">
+                                                            <item>Probably you misspelled something! Answer the question again.</item>
+                                                            <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                                            <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                                        </prompt>
+                                                        <goto ref="userRebootComputerWebBrowser"/>
+                                                    </output>
+                                                </getUserInput>
+                                            </output>
+                                        </input>
+                                        <input>
+                                            <grammar>
+                                                <item>no</item>
+                                                <item>$ no</item>
+                                            </grammar>
+                                            <output>
+                                                <prompt selectionType="RANDOM">
+                                                    <item>Probably there is an issue with the network. Investigation is need from our team. But before sending your details I need some more information.</item>
+                                                    <item>Well, so the problem is with the network. I will ask you more questions before sending the issue detaisl to our team.</item>
+                                                </prompt>
+                                                <goto ref="userWebNetworkProblemBonusInfo"/>
+                                            </output>
+                                        </input>
+                                        <output>
+                                            <prompt selectionType="RANDOM">
+                                                <item>Probably you misspelled something! Answer the question again.</item>
+                                                <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                                <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                            </prompt>
+                                            <goto ref="cables-connected"/>
+                                        </output>
+                                    </getUserInput>
+                                </output>
+                            </input>
+                            <output>
+                                <prompt selectionType="RANDOM">
+                                    <item>Probably you misspelled something! Answer the question again.</item>
+                                    <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                    <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                </prompt>
+                                <goto ref="peopleAffected"/>
+                            </output>
+                        </getUserInput>
+                    </output>
+                    <output id="userWebNetworkProblemBonusInfo">
+                        <prompt>
+                            <item>What is the name of your computer? (computer name)</item>
+                        </prompt>
+                        <getUserInput>
+                            <input>
+                                <grammar>
+                                    <item>The name of my computer is</item>
+                                    <item>$ (freeanswer)={var-user-computer_name}</item>
+                                </grammar>
+                                <action varName="var-user-computer_name" operator="SET_TO">{var-user-computer_name.source}</action>
+                                <output id="userMacAddress">
+                                    <prompt>
+                                        <item>Enter your computer's MAC address. (mac address)</item>
+                                    </prompt>
+                                    <getUserInput>
+                                        <input>
+                                            <grammar>
+                                                <item>My mac address is</item>
+                                                <item>$ (freeanswer)={var-user_macaddress}</item>
+                                            </grammar>
+                                            <action varName="var-user_macaddress" operator="SET_TO">{var-user_macaddress.source}</action>
+                                            <output id="networkPointNumber">
+                                                <prompt>
+                                                    <item>Perfect. I would need one last thing - what is your network point number? (network point number)</item>
+                                                </prompt>
+                                                <getUserInput>
+                                                    <input>
+                                                        <grammar>
+                                                            <item>My network point is</item>
+                                                            <item>$ (freeanswer)={var-user_networkpointnumber}</item>
+                                                        </grammar>
+                                                        <action varName="var-user_networkpointnumber" operator="SET_TO">{var-user_networkpointnumber.source}</action>
+                                                        <output>
+                                                            <prompt>
+                                                                <item>
+                                                                    Wonderful! Your information is - Name: {var-user_name}, Email: {var-user_email}, Tel: {var-user_tel}, Location: {var-user_loc}, Problem: {var-problem_type},
+                                                                    Name of computer: {var-user-computer_name}, MAC address: {var-user_macaddress}, Network point number: {var-user_networkpointnumber}. I will send it to our team.
+                                                                </item>
+                                                            </prompt>
+                                                            <goto ref="conversationStartOver"/>
+                                                        </output>
+                                                    </input>
+                                                </getUserInput>
+                                            </output>
+                                        </input>
+                                    </getUserInput>
+                                </output>
+                            </input>
+                        </getUserInput>
+                    </output>
+                </output>
+                <output id="wirelessNetworkFault">
+                    <prompt>
+                        <item>Is the network slow or totally down? (slow/down)</item>
+                    </prompt>
+                    <getUserInput>
+                        <input>
+                            <grammar>
+                                <item>slow</item>
+                                <item>$ slow</item>
+                            </grammar>
+                            <goto ref="peopleAffected-wifi"/>
+                        </input>
+                        <input>
+                            <grammar>
+                                <item>down</item>
+                                <item>$ down</item>
+                            </grammar>
+                            <output id="has-it-worked-wifi">
+                                <prompt>
+                                    <item>Has it ever worked? (y/n)</item>
+                                </prompt>
+                                <getUserInput>
+                                    <input>
+                                        <grammar>
+                                            <item>yes</item>
+                                            <item>$ yes</item>
+                                        </grammar>
+                                        <goto ref="peopleAffected-wifi"/>
+                                    </input>
+                                    <input>
+                                        <grammar>
+                                            <item>no</item>
+                                            <item>$ no</item>
+                                        </grammar>
+                                        <output>
+                                            <prompt selectionType="RANDOM">
+                                                <item>If you are using Eduroam, try UOBWifi, or vice-versa.</item>
+                                            </prompt>
+                                        </output>
+                                    </input>
+                                    <output>
+                                        <prompt selectionType="RANDOM">
+                                            <item>Probably you misspelled something! Answer the question again.</item>
+                                            <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                            <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                        </prompt>
+                                        <goto ref="has-it-worked-wifi"/>
+                                    </output>
+                                </getUserInput>
+                            </output>
+                        </input>
+                        <output>
+                            <prompt selectionType="RANDOM">
+                                <item>Probably you misspelled something! Answer the question again.</item>
+                                <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                            </prompt>
+                            <goto ref="wirelessNetworkFault"/>
+                        </output>
+                    </getUserInput>
+                    <output id="peopleAffected-wifi">
+                        <prompt>
+                            <item>How many people are affected? (many/justme)</item>
+                        </prompt>
+                        <getUserInput>
+                            <input>
+                                <grammar>
+                                    <item>many</item>
+                                    <item>$ many</item>
+                                </grammar>
+                                <output>
+                                    <prompt selectionType="RANDOM">
+                                        <item>Probably there is an issue with the network. Investigation is need from our team. But before sending your details I need some more information.</item>
+                                        <item>Well, so the problem is with the network. I will ask you more questions before sending the issue detaisl to our team.</item>
+                                    </prompt>
+                                    <goto ref="userWirelessNetworkProblemBonusInfo"/>
+                                </output>
+                            </input>
+                            <input>
+                                <grammar>
+                                    <item>just me</item>
+                                    <item>$ just me</item>
+                                </grammar>
+                                <output id="network-change">
+                                    <prompt>
+                                        <item>If using Eduroam, try UOBWifi, or vice-versa. Is this working? (y/n)</item>
+                                    </prompt>
+                                    <getUserInput>
+                                        <input>
+                                            <grammar>
+                                                <item>no</item>
+                                                <item>$ no</item>
+                                            </grammar>
+                                            <output id="userRebootComputerWirelessBrowser">
+                                                <prompt>
+                                                    <item>Have you tried rebooting the computer? (y/n)</item>
+                                                </prompt>
+                                                <getUserInput>
+                                                    <input>
+                                                        <grammar>
+                                                            <item>$ yes</item>
+                                                            <item>yes</item>
+                                                        </grammar>
+                                                        <output>
+                                                            <prompt selectionType="RANDOM">
+                                                                <item>Perhaps there is an issue with the device set up. Before forwarding your information to our team, I need to ask you some more questions.</item>
+                                                                <item>Probably you have a problem with the device set up. In order to be fixed, I need some more info from you that I will forward to our team.</item>
+                                                            </prompt>
+                                                            <goto ref="userWirelessNetworkProblemBonusInfo"/>
+                                                        </output>
+                                                    </input>
+                                                    <input>
+                                                        <grammar>
+                                                            <item>$ no</item>
+                                                            <item>no</item>
+                                                        </grammar>
+                                                        <output>
+                                                            <prompt>
+                                                                <item>Reboot the computer and come back if there is still an issue.</item>
+                                                            </prompt>
+                                                            <goto ref="conversationStartOver"/>
+                                                        </output>
+                                                    </input>
+                                                    <output>
+                                                        <prompt selectionType="RANDOM">
+                                                            <item>Probably you misspelled something! Answer the question again.</item>
+                                                            <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                                            <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                                        </prompt>
+                                                        <goto ref="userRebootComputerWirelessBrowser"/>
+                                                    </output>
+                                                </getUserInput>
+                                            </output>
+                                        </input>
+                                        <input>
+                                            <grammar>
+                                                <item>yes</item>
+                                                <item>$ yes</item>
+                                            </grammar>
+                                            <output>
+                                                <prompt selectionType="RANDOM">
+                                                    <item>The problem may be a temporary issue with one of the networks. Using the other one should resolve the is issue. Change your wifi network.</item>
+                                                </prompt>
+                                                <goto ref="conversationStartOver"/>
+                                            </output>
+                                        </input>
+                                        <output>
+                                            <prompt selectionType="RANDOM">
+                                                <item>Probably you misspelled something! Answer the question again.</item>
+                                                <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                                <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                            </prompt>
+                                            <goto ref="network-change"/>
+                                        </output>
+                                    </getUserInput>
+                                </output>
+                            </input>
+                            <output>
+                                <prompt selectionType="RANDOM">
+                                    <item>Probably you misspelled something! Answer the question again.</item>
+                                    <item>Are you sure that you gave me an appropriate answer! Try again.</item>
+                                    <item>Sorry but I wasn't able to catch that - try one more time!</item>
+                                </prompt>
+                                <goto ref="peopleAffected-wifi"/>
+                            </output>
+                        </getUserInput>
+                    </output>
+                    <output id="userWirelessNetworkProblemBonusInfo">
+                        <prompt>
+                            <item>What is the type of your device?</item>
+                        </prompt>
+                        <getUserInput>
+                            <input>
+                                <grammar>
+                                    <item>The type of my device is</item>
+                                    <item>$ (freeanswer)={var-user-device_type}</item>
+                                </grammar>
+                                <action varName="var-user-device_type" operator="SET_TO">{var-user-device_type.source}</action>
+                                <output id="userMacAddress-wifi">
+                                    <prompt>
+                                        <item>Enter your computer's MAC address. (mac address)</item>
+                                    </prompt>
+                                    <getUserInput>
+                                        <input>
+                                            <grammar>
+                                                <item>My mac address is</item>
+                                                <item>$ (freeanswer)={var-user_macaddress}</item>
+                                            </grammar>
+                                            <action varName="var-user_macaddress" operator="SET_TO">{var-user_macaddress.source}</action>
+                                            <output id="networkSSID">
+                                                <prompt>
+                                                    <item>Perfect. Now tell me what is your network SSID? (network SSID)</item>
+                                                </prompt>
+                                                <getUserInput>
+                                                    <input>
+                                                        <grammar>
+                                                            <item>My network SSID is</item>
+                                                            <item>$ (freeanswer)={var-user_networkssid}</item>
+                                                        </grammar>
+                                                        <action varName="var-user_networkssid" operator="SET_TO">{var-user_networkssid.source}</action>
+                                                        <output id="time-attempted-connection">
+                                                            <prompt>
+                                                                <item>I will one last thing. What time did you try to connect to the Wifi?</item>
+                                                            </prompt>
+                                                            <getUserInput>
+                                                                <input>
+                                                                    <grammar>
+                                                                        <item>I tried to connect</item>
+                                                                        <item>$ (freeanswer)={var-user_networkattemptedconnection}</item>
+                                                                    </grammar>
+                                                                    <action varName="var-user_networkattemptedconnection" operator="SET_TO">{var-user_networkattemptedconnection.source}</action>
+                                                                    <output>
+                                                                        <prompt>
+                                                                            <item>
+                                                                                Wonderful! Your information is - Name: {var-user_name}, Email: {var-user_email}, Tel: {var-user_tel}, Location: {var-user_loc}, Problem: {var-problem_type},
+                                                                                Device type: {var-user-device_type}, MAC address: {var-user_macaddress}, Network SSID: {var-user_networkssid}, Time of attempted connection: {var-user_networkattemptedconnection}. I will send it to our team.
+                                                                            </item>
+                                                                        </prompt>
+                                                                        <goto ref="conversationStartOver"/>
+                                                                    </output>
+                                                                </input>
+                                                            </getUserInput>
+                                                        </output>
+                                                    </input>
+                                                </getUserInput>
+                                            </output>
+                                        </input>
+                                    </getUserInput>
+                                </output>
+                            </input>
+                        </getUserInput>
+                    </output>
+                </output>
+            </folder>
+        </folder>
+        <folder label="Global"/>
+        <folder label="Concepts">
+            <concept>
+                <grammar>
+                    <item>IPA</item>
+                    <item>Intelligent Agent</item>
+                    <item>Intelligent Personal Agent</item>
+                </grammar>
+            </concept>
+        </folder>
+    </flow>
+    <entities>
+        <entity name="freeanswer">
+			<value name="freeanswer" value="freeanswer">
+                <grammar>
+                    <item>*</item>
+                </grammar>
+            </value>
+		</entity>
+    </entities>
+    <constants>
+        <var_folder name="Home">
+            <var_folder name="General" type="CONST">
+                <var name="IT_Tel" type="TAG" description="Telophone number of the IT services desk">0000000000</var>
+                <var name="IT_Email" type="TAG" description="Email of IT the services desk">email@itservices.co.uk</var>
+                <var name="IA" type="TAG">Intelligent Agent</var>
+            </var_folder>
+        </var_folder>
+    </constants>
+    <variables>
+        <var_folder name="Home">
+            <var name="var-user_name" type="TEXT" description="Full name of the user"/>
+            <var name="var-user_email" type="TEXT" description="Email address of the user"/>
+            <var name="var-user_tel" type="TEXT" description="Telephone of the user"/>
+            <var name="var-user_loc" type="TEXT" description="Location of the user"/>
+            <var name="var-email-user_type" type="TEXT" description="Type of the user - student/staff"/>
+            <var name="var-email-user_email" type="TEXT" description="The email that user has to check"/>
+            <var name="var-problem_type" type="TEXT" description="The main area of the user's problem"/>
+            <var name="var-user-computer_name" type="TEXT" description="User's computer name"/>
+            <var name="var-user_errormessages" type="TEXT" description="Error messages received from the user"/>
+            <var name="var-user_macaddress" type="TEXT" description="The MAC address of user's computer"/>
+            <var name="var-user_networkpointnumber" type="TEXT" description="User's network point number"/>
+            <var name="var-user-device_type" type="TEXT" description="User's device type"/>
+            <var name="var-user_macaddress" type="TEXT" description="The MAC address of user's computer"/>
+            <var name="var-user_var-user_networkssid" type="TEXT" description="User's networkr SSID"/>
+            <var name="var-user_networkattemptedconnection" type="TEXT" description="Error messages received from the user"/>
+        </var_folder>
+    </variables>
+    <settings>
+        <setting name="USERIDNUM" type="USER">17384</setting>
+        <setting name="EMAIL" type="USER"></setting>
+        <setting name="PASSWORD" type="USER"></setting>
+        <setting name="FIRSTNAME" type="USER">IBM</setting>
+        <setting name="LASTNAME" type="USER">Watson</setting>
+        <setting name="COUNTRY" type="USER">USA</setting>
+        <setting name="STATE" type="USER">NY State</setting>
+        <setting name="CITY" type="USER">NY</setting>
+        <setting name="BDAY" type="USER">1</setting>
+        <setting name="BMONTH" type="USER">1</setting>
+        <setting name="BYEAR" type="USER">2000</setting>
+        <setting name="SEX" type="USER">Male</setting>
+        <setting name="DISPLAYNAME" type="USER">John</setting>
+        <setting name="PROVIDESECURITYPASSWORD" type="USER">false</setting>
+        <setting name="SECURITYPASSWORD" type="USER"></setting>
+        <setting name="SHOWPERSPROFILE" type="USER">false</setting>
+        <setting name="USETYPE" type="USER">0</setting>
+        <setting name="DATEJOINED" type="USER">2015-07-14 15:12:07.745</setting>
+        <setting name="LASTLOGIN" type="USER">2015-07-14 15:12:07.745</setting>
+        <setting name="LOGINCOUNT" type="USER">0</setting>
+        <setting name="CREDIT" type="USER">100</setting>
+        <setting name="CONVCOUNT" type="USER">4</setting>
+        <setting name="PERSONALITYTYPEID" type="USER">6</setting>
+        <setting name="SHOWSENDMESSAGE" type="USER">true</setting>
+        <setting name="ACTIVATED" type="USER">true</setting>
+        <setting name="MESSENGEREMAIL" type="USER"></setting>
+        <setting name="MESSENGERPASSWORD" type="USER"></setting>
+        <setting name="SENDCHATEMAIL" type="USER">false</setting>
+        <setting name="SENDFAVEMAIL" type="USER">true</setting>
+        <setting name="CACHE" type="USER">true</setting>
+        <setting name="CLASSTYPE" type="USER">3</setting>
+        <setting name="AUTOLEARN" type="USER">false</setting>
+        <setting name="LANGUAGE" type="USER">EN</setting>
+        <setting name="RESPONSETIME" type="USER">-2</setting>
+        <setting name="MAXAUTOLEARNITEMS" type="USER">4</setting>
+        <setting name="NUMAUTOSETRELATED" type="USER">0</setting>
+        <setting name="TIMEZONEID" type="USER">America/New_York</setting>
+        <setting name="AUTOSETRELATEDNODEID" type="USER">0</setting>
+        <setting name="RETURNTOCHATNODEID" type="USER">0</setting>
+        <setting name="INPUTMASKTYPE" type="USER">0</setting>
+        <setting name="NUMLOGINATTEMPTS" type="USER">0</setting>
+        <setting name="CONCEPTMATCHING" type="USER">1</setting>
+        <setting name="UI_COLOUR"></setting>
+        <setting name="USE_CONCEPTS">3</setting>
+        <setting name="PARENT_ACCOUNT"></setting>
+        <setting name="AL_NONE_LABEL">None of the above</setting>
+        <setting name="ASR_RANDOM">true</setting>
+        <setting name="DYNAMIC_MESSAGING">false</setting>
+        <setting name="DOCBASE_NUM_RESULTS">3</setting>
+        <setting name="DOCBASE_DESC_LEN">250</setting>
+        <setting name="STATUS">0</setting>
+        <setting name="DEFAULT_DNR_RETURN_POINT_CANDIDATE">-1</setting>
+        <setting name="ENTITIES_SCOPE">3</setting>
+        <setting name="POSTNODEID"></setting>
+        <setting name="MULTISENT">0</setting>
+        <setting name="DNR_NODE_ID">-15</setting>
+        <setting name="CLEARCACHE"></setting>
+    </settings>
+    <specialSettings>
+        <specialSetting label="DNR Join Statement">
+            <variations/>
+        </specialSetting>
+    </specialSettings>
+</dialog>

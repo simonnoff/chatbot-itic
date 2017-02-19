@@ -1,0 +1,27 @@
+//- index.jade
+extends ./layout.jade
+
+block row-content
+
+  div.row.conversation-div()
+    div.container
+      div.main-wrapper
+        div#conversation-flow-container.clearfix
+          div.col-lg-12.col-md-12.col-xs-12
+            div.conversation-well.conversation-container.clearfix
+          div.dialogs-loading.text-center
+            img.watson-loading-gif(src='images/loading-indicator.svg')
+          div.text-center.dialogs-error
+            div.errorMsg
+          div.col-lg-10.col-md-10.col-xs-8.no-padding-right.add-margin
+            input.user-input.form-control#response-input(type='text', placeholder='Start typing...')
+          div.col-lg-2.col-md-2.col-xs-4.no-padding-left.add-margin
+            div.button-style
+              button.input-btn#send-btn Send
+      //-div
+        h4.information-title Information
+        div.col-lg-12.col-md-12.col-xs-12
+          div.information-container
+        h4.information-title Profile
+        div.col-lg-12.col-md-12.col-xs-12
+          div.profile-container -//

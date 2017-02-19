@@ -1,0 +1,353 @@
+.img-container img {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+}
+
+.errorMsg {
+    font-weight: bold;
+    color: #7bbe31;
+    white-space: pre-wrap;
+    margin-bottom: 1.25rem;
+}
+
+.header-text {
+    color: #FF7832;
+    font-weight: 500;
+    margin-top: 2rem;
+    padding-left: 15px;
+}
+
+.loading {
+    margin-top: -2rem;
+    z-index: 100;
+}
+
+.mar10r {
+    margin-left: 10px;
+}
+
+.watson-loading-gif {
+    width: 50px;
+    margin-bottom: 2REM;
+}
+
+.dialog-name-span {
+    font-weight: bold;
+}
+
+#name {
+    border-top: 0px;
+    border-right: 0px;
+    border-left: 0px;
+    padding-left: 0px;
+}
+
+#file {
+    border: 0px;
+}
+
+.new-dialog-container {
+    border: 1px solid #e6e7e8;
+    cursor: pointer;
+    padding: 1.2rem;
+    margin-top: 2rem;
+}
+
+.new-dialog-container-loading {
+    margin-top: 10rem;
+    margin-bottom: 11.1rem;
+}
+
+.new-dialog-container:hover {
+    border: 1px solid #00B2EF;
+}
+
+.dialog-flow-title:hover {
+    color: #00B2EF;
+}
+
+.selected {
+    border: 1px solid #00B2EF;
+}
+
+.new-dialog-input-container {
+    margin: 6.75rem 0;
+}
+
+.create-btn:hover {
+    color: #00B2EF;
+    background-color: #fff;
+    border: 1px solid #00B2EF;
+}
+
+.dialog-flow-title {
+    text-align: center;
+    margin: 13rem 0;
+    line-height: 0px;
+    font-size: 41px;
+}
+
+.exist-dialog-flow-title {
+    text-align: center;
+    margin: 13rem 0 11.2rem;
+    line-height: 0px;
+}
+
+.new-dialog-flow-content {
+    display: none;
+}
+
+.dialog-links {
+    float: right;
+}
+
+.bubble-watson
+{
+    position: relative;
+    width: 51%;
+    float: left;
+    text-align: left;
+    background: #DCDCDC;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    margin-left: 60px;
+    padding-bottom:10px;
+    padding-top:10px;
+    padding-right:15px;
+    padding-left:15px;
+    font-size:16px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+}
+
+.team-picture{
+    position:absolute;
+    background: url('../images/HRteam.jpg') no-repeat left center ;
+    background-size:75px 70px;
+    top:0;
+    left:-60px;
+    height:50px;
+    width:50px;
+    border-radius: 25px;
+}
+
+/* .bubble-watson:after
+{
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 5px 16px 7px 0;
+    border-color: transparent #DCDCDC;
+    display: block;
+    width: 0;
+    z-index: 1;
+    left: -16px;
+    top: 18px;
+} */
+.bubble-human
+{
+    position: relative;
+    padding: 0px;
+    width: 51%;
+    background: #3079AB;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    float: right;
+    text-align: right;
+    padding-bottom:10px;
+    padding-top:10px;
+    padding-right:15px;
+    padding-left:15px;
+    margin-right:60px;
+    color:#fff;
+    font-size:16px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+}
+
+.human-picture{
+    position:absolute;
+    background: url('../images/icon-user-default.png') no-repeat center center ;
+    background-size:cover;
+    top:0;
+    right:-60px;
+    height:50px;
+    width:50px;
+    border-radius: 25px;
+}
+
+/* .bubble-human:after
+{
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 5px 0 5px 16px;
+    border-color: transparent #3079AB;
+    display: block;
+    width: 0;
+    z-index: 1;
+    right: -16px;
+    top: 18px;
+} */
+
+.no-padding-right {
+    padding-right: 0!important;
+}
+
+.no-padding-left {
+    padding-left: 0!important;
+}
+
+#response-input {
+    border: 0;
+    border-bottom: 1px solid #848484;
+    padding: 30px 10px;
+    font-size:20px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+
+}
+
+#send-btn {
+    border: 0;
+    background: transparent;
+    color: #3079AB;
+    font-size:17px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    outline: none;
+
+}
+.button-style{
+    text-align:center;
+    padding:16px 0;
+    border-bottom: 1px solid #848484;
+}
+
+#conversation-flow-container {
+    background-color: #fff;
+    padding: 1rem 0;
+    overflow:   auto;
+    position:   absolute;
+    bottom:     0;
+    max-height: 100%;
+    width:100%;
+}
+
+.conversation-div {
+    margin-bottom: 0;
+}
+
+.margin-bottom {
+    margin-bottom: 3rem!important;
+}
+
+.information-container {
+    margin-bottom: 20px;
+    color: #e0e0e0;
+}
+
+.profile-container {
+    color: #e0e0e0;
+}
+
+.information-title {
+    color: #FEC217;
+}
+
+.clear-float {
+    clear:both;
+}
+
+.user-choice{
+    position: relative;
+    float:right;
+    width:51%;
+    text-align: right;
+    margin-bottom:15px;
+    margin-right: 60px;
+}
+.input-choice{
+    margin-left:10px;
+    padding: 7px 20px;
+    background:transparent;
+    border:1px solid #3079AB;
+    border-radius:20px;
+    color:#3079AB;
+    font-size:16px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    outline:none;
+}
+.input-choice:hover{
+    background:#3079AB;
+    color:#fff;
+}
+
+.main-wrapper{
+    background:#fff;
+    overflow:   none;
+    position:   relative;
+    bottom:0;
+    width:      100%;
+    height:     100vh;
+}
+
+.add-margin{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+div.watson-wrapper{
+    position: relative;
+    padding: 0px;
+    width: 100%;
+    float: left;
+}
+
+div.explanantion{
+  position: relative;
+  display: inline-block;
+}
+div.explanantion .explanantion-sign{
+    height: 15px;
+    width:15px;
+    margin-left:5px;
+    background:transparent;
+    font-size:18px;
+    color:#3079AB;
+    cursor:pointer;
+}
+div.explanantion:hover .explanantion-text{
+  display:block;
+}
+div.explanantion .explanantion-text{
+  position: absolute;
+  z-index:1000;
+  display: none;
+  width:300px;
+  background: #fff;
+  font-size:16px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  color:#3079AB;
+  border:1px solid #3079AB;
+  border-radius: 4px;
+  bottom:15px;
+  left:-50px;
+  padding:10px;
+}
+a.mac-address-link{
+    color:#3079AB;
+    text-decoration: underline;
+}
+a.mac-address-link:hover{
+    text-decoration: none;
+    cursor:pointer;
+    color:#3079AB;
+}
