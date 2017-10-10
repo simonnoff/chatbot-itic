@@ -5,8 +5,8 @@ It assists students in solving thier hardware or software issues. You can find t
 
 In order to run it locally you need to create IBM Bluemix account and add the credentials to the app.
 This can be done using this helper git repos: 
-  * [https://github.com/watson-developer-cloud/conversation-simple] (https://github.com/watson-developer-cloud/conversation-simple)
-  * [https://github.com/biosopher/watson-ipa-web-nodejs/wiki] (https://github.com/biosopher/watson-ipa-web-nodejs/wiki)
+  * https://github.com/watson-developer-cloud/conversation-simple
+  * https://github.com/biosopher/watson-ipa-web-nodejs/wiki
   
 Then run: 
   * npm install
